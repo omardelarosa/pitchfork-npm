@@ -7,6 +7,10 @@ var request = require('superagent')
       Review: require('./review')
     };
 
+// global constants
+var USAGE = "usage: pitchfork [-hVv] -a ARTIST_NAME -t ALBUM_TITLE";
+var VERSION = require("./package").version;
+
 function parse_args(args){
   var artistFlagIdx = args.indexOf("-a")
   var albumTitleIdx = args.indexOf("-t")
@@ -39,24 +43,26 @@ var version = opts.version || false;
 // if in "help mode"
 if (origArgs.indexOf("-h") != -1 || origArgs.length == 4) {
   // display usage
-  console.log("usage: pitchfork [-hVv] -a ARTIST_NAME -t ALBUM_TITLE")
+  console.log(USAGE)
 
 // if there's an artist and/or album
 } else if (version) {
-  console.log(require("./package").version)
+  console.log(VERSION)
 } else if (artist || album) {
-   s = new Pitchfork.Search(artist, album);
-    s.promise.then(function(){
+   search = new Pitchfork.Search(artist, album);
+    search.promise.then(function(){
       // console.log(JSON.stringify(s.results[0]));
-      var rev = s.results[0];
-      rev.promise.then(function(){
+      var review = search.results[0];
+      review.promise.then(function(){
         if (json || verbose) {
-          console.log(JSON.stringify(rev.attributes))
+          console.log(JSON.stringify(review.attributes))
         } else {
-          console.log(JSON.stringify(rev.truncated()));
+          console.log(JSON.stringify(review.truncated()));
         }
       })
     })
 }
 
 module.exports = Pitchfork;
+module.exports.USAGE = USAGE;
+module.exports.VERSION = VERSION;
