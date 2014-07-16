@@ -29,7 +29,6 @@ describe("Review", function(){
 
     it("the review's title should be for the correct album", function(done){
       review.attributes.title.should.include('Mogwai: Come On Die Young');
-      console.log("attributes", review.attributes);
       done();
     })
 
@@ -53,6 +52,12 @@ describe("Review", function(){
      (function(){return new Review() }).should.throw(Error);
       done();
     })
+
+  })
+
+  describe("when review is a MultiReview", function(){
+
+
 
   })
 

@@ -63,7 +63,7 @@ Review.prototype.fetch = function(){
   function parseHtml(){
 
     self.attributes.title = self.fullTitle.trim();
-    self.attributes.score = self.$(".score").text().trim();
+    self.attributes.score = parseFloat(self.$(".score").text().trim());
     // TODO: replace breaks
     self.attributes.editorial = {
       html: self.$(".editorial").html(),
@@ -93,6 +93,19 @@ Review.prototype.fetch = function(){
     }
   })
   return dfd.promise;
+}
+
+Review.prototype.truncated = function(){
+  return {
+    artist: this.attributes.artist,
+    album: this.attributes.album,
+    author: this.attributes.author,
+    score: this.attributes.score,
+    text: this.attributes.editorial.text.slice(0,300)+"...",
+    cover: this.attributes.cover,
+    label: this.attributes.label,
+    year: this.attributes.year
+  }
 }
 
 // Review.prototype.toString = function(){
