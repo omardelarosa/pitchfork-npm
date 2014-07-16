@@ -9,20 +9,25 @@ chai.use(chaiAsPromised)
 
 describe("Searching for a review", function(){
 
+  var search = new Search("mogwai", "come on")
+
+  it("should return an instance of {Search}", function(done){
+    search.should.be.instanceOf(Search);
+    done();
+  })
+
   describe("when the artist and album are given", function(){
 
-    var review;
+    var search = new Search("mogwai", "come on")
 
-    it("should return a fulfilled promise", function(done){
-      var search = Search("mogwai", "come on")
-      search.should.eventually.be.fulfilled.then(function(res){
-        review = res;
-        done();
-      })
+    it(" .init should return a fulfilled promise", function(done){
+      search.promise.should.eventually.be.fulfilled.and.notify(done)
     });
 
-    it("should return a {Review} object", function(done){
-      review.should.be.instanceOf(Review)
+    it("should return an {Array} with a single {Review} object", function(done){
+      // console.log("results", search.results[0].constructor)
+      search.results[0].should.be.instanceOf(Review)
+      search.results.length.should.eq(1);
       done();
     })
 
@@ -30,19 +35,15 @@ describe("Searching for a review", function(){
 
   describe("when only the artist is given", function(){
 
-    var review;
+    var search = new Search("mogwai")
 
     it("should return a fulfilled promise", function(done){
-      var search = Search("mogwai")
-      search.should.eventually.be.fulfilled.then(function(res){
-        review = res;
-        done();
-      })
+      search.promise.should.eventually.be.fulfilled.and.notify(done)
     });
 
-    it("should return an {Array} of {Review} objects", function(done){
-      review.should.be.instanceOf(Array);
-      review[0].should.be.instanceOf(Review);
+    it(".results should return an {Array} of {Review} objects", function(done){
+      search.results.should.be.instanceOf(Array);
+      search.results.length.should.be.above(1);
       done();
     })
 
@@ -50,19 +51,14 @@ describe("Searching for a review", function(){
 
   describe("when a non-existant artist is given", function(){
 
-    var review;
+    var search = new Search("modddiasdfasdf")
 
     it("should return a fulfilled promise", function(done){
-      var search = Search("modddiasdfasdf")
-      search.should.eventually.be.fulfilled.then(function(res){
-        review = res;
-        done();
-      })
+      search.promise.should.eventually.be.fulfilled.and.notify(done)
     });
 
     it("should return an empty {Array}", function(done){
-      review.should.be.instanceOf(Array)
-      review.length.should.equal(0);
+      search.results.length.should.eq(0);
       done();
     })
 

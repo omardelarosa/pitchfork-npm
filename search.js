@@ -30,11 +30,27 @@ function get_review_objects(responseBody){
 
 function Search(artist, album, cb){
   
-
   // future attributes of album
   var attributes = {};
+
+  // a container for search results
+  this.results = [];
   // replace spaces with %20
-  var query = [artist,"%20",album].join("").replace(/\s+/,"%20");
+  
+  this.query = {
+    artist: artist,
+    album: album,
+    cb: cb
+  };
+
+  // run search;
+  this.promise = this.init();
+
+}
+
+Search.prototype.init = function(){
+  var self = this;
+  var query = [self.query.artist,"%20",self.query.album].join("").replace(/\s+/,"%20");
   // create a deferred obj
   var dfd = q.defer();
 
@@ -48,24 +64,25 @@ function Search(artist, album, cb){
         // if there are no matches...
         if (reviews.length === 0) {
           // ...return no results
-          return dfd.resolve([])
+          self.results = [];
         // if there are some matches and an album was entered
-        } else if (reviews.length > 0 && album) {
+        } else if (reviews.length > 0 && self.query.album) {
           // return a single review object with that album
-          return dfd.resolve(new Review(reviews[0]))
+          self.results = [new Review(reviews[0])];
           // if there are multiple matches and no album was entered
         } else {
-          var results = [];
-          reviews.forEach(function(review){
-            results.push(new Review(review));
-          });
           // return an array of albums
-          if (cb) { cb(results); }
-          return dfd.resolve(results);
-        }   
+          self.results = [];
+          reviews.forEach(function(review){
+            self.results.push(new Review(review));
+          });
+        }  
+        if (self.query.cb) { self.query.cb(results); }
+        return dfd.resolve(self.results); 
       }
     })
   return dfd.promise;
+
 }
 
 module.exports = Search;

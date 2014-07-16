@@ -38,11 +38,23 @@ function Review(attributes){
 Review.prototype.fetch = function(cb){
   var dfd = q.defer();
   var self = this;
+
+  /**
+    * Parses the HTML received after fetch and sets attributes
+    * 
+    */
+
+  function parseHtml(){
+
+  }
+
   request.get(this.fullUrl)
   .end(function(res){
     self.html = res.text;
     self.$ = cheerio.load(self.html);
+    // set attributes from html
     self.title = self.$("title").text();
+    // TODO parse other attributes;
     if (self.title == "Page Not Found") {
       dfd.reject("Page Not Found!");
     } else {
@@ -53,8 +65,8 @@ Review.prototype.fetch = function(cb){
   return dfd.promise;
 }
 
-Review.prototype.toString = function(){
-  return this.attributes;
-}
+// Review.prototype.toString = function(){
+//   return this.attributes;
+// }
 
 module.exports = Review;
