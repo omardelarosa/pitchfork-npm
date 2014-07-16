@@ -4,8 +4,8 @@ var chai = require('chai')
 var chaiAsPromised = require("chai-as-promised");
 
 chai.should()
-
 chai.use(chaiAsPromised)
+
 
 describe("Searching for a review", function(){
 

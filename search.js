@@ -2,6 +2,8 @@ var request = require('superagent');
 var q = require('q');
 var Review = require('./review.js');
 
+// globals
+var version = require('./package').version;
 
 // extracts the first review inside of 
 function get_review_objects(responseBody){
@@ -22,9 +24,11 @@ function get_review_objects(responseBody){
   * Conducts a new search
   * @param {string} artist - a musical artist likely to be reviewed on Pitchfork
   * @param {string} album - an album by the given artist
+  *
+  * returns {Promise}
   */
 
-function Search(artist, album){
+function Search(artist, album, cb){
   
 
   // future attributes of album
@@ -35,6 +39,7 @@ function Search(artist, album){
   var dfd = q.defer();
 
   request.get("http://pitchfork.com/search/ac/?query="+query)
+    .set('User-Agent', 'omardelarosa/pitchfork-npm-v'+version)
     .end(function(res) {
       if (res.statusCode != 200) {
         dfd.reject("Failed to connect to Pitchfork!");
@@ -43,11 +48,11 @@ function Search(artist, album){
         // if there are no matches...
         if (reviews.length === 0) {
           // ...return no results
-          dfd.resolve([])
+          return dfd.resolve([])
         // if there are some matches and an album was entered
         } else if (reviews.length > 0 && album) {
           // return a single review object with that album
-          dfd.resolve(new Review(reviews[0]))
+          return dfd.resolve(new Review(reviews[0]))
           // if there are multiple matches and no album was entered
         } else {
           var results = [];
@@ -55,7 +60,8 @@ function Search(artist, album){
             results.push(new Review(review));
           });
           // return an array of albums
-          dfd.resolve(results);
+          if (cb) { cb(results); }
+          return dfd.resolve(results);
         }   
       }
     })
