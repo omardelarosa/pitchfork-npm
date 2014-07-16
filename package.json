@@ -1,0 +1,33 @@
+{
+  "name": "pitchfork",
+  "version": "0.0.0",
+  "description": "An Unofficial Pitchfork Music API client for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/omardelarosa/pitchfork-npm.git"
+  },
+  "keywords": [
+    "pitchfork",
+    "music",
+    "api"
+  ],
+  "author": "Omar Delarosa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/omardelarosa/pitchfork-npm/issues"
+  },
+  "homepage": "https://github.com/omardelarosa/pitchfork-npm",
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "chai-as-promised": "^4.1.1",
+    "mocha": "^1.20.1"
+  },
+  "dependencies": {
+    "q": "^1.0.1",
+    "superagent": "^0.18.2"
+  }
+}
