@@ -15,14 +15,6 @@ describe("Review", function(){
         name: 'Mogwai - Come On Die Young '
       })
 
-    xit("should have a .name", function(done){
-
-    })
-
-    xit("should have a .url", function(done){
-
-    })
-
     it("should #fetch the review", function(done){
       review.promise.should.eventually.be.fulfilled.and.notify(done);
     })

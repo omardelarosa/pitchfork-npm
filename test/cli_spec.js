@@ -12,6 +12,7 @@ var cli_filepath = path.resolve(__dirname+"/../bin/pitchfork");
 var artist_name = "mogwai";
 var album_title = "come on";
 var valid_args = ["-a", artist_name, "-t", album_title];
+var verbose_args = ["-a", artist_name, "-t", album_title, "-v"];
 var review;
 var search;
 
@@ -31,9 +32,16 @@ describe("CLI (Command Line Tool)", function(){
 
   describe("when searching for a valid artist and album", function(){
 
-    it("should return truncated and valid json", function(done){
+    it("should return truncated and valid json by default", function(done){
       var proc = execFile(cli_filepath, valid_args, function(err, stdout, stderr){
         expect(stdout).to.equal(JSON.stringify(review.truncated())+"\n")
+        done();
+      })
+    })
+
+    it("should return full and valid json when -v flag is passed", function(done){
+      var proc = execFile(cli_filepath, verbose_args, function(err, stdout, stderr){
+        expect(stdout).to.equal(JSON.stringify(review.attributes)+"\n")
         done();
       })
     })
