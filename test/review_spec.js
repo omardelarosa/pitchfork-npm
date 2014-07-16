@@ -28,7 +28,8 @@ describe("Review", function(){
     })
 
     it("the review's title should be for the correct album", function(done){
-      review.attributes.fullTitle.should.include('Mogwai: Come On Die Young');
+      review.attributes.title.should.include('Mogwai: Come On Die Young');
+      console.log("attributes", review.attributes);
       done();
     })
 
@@ -44,14 +45,12 @@ describe("Review", function(){
         name: 'Fakey - McFake'
       })
       review.promise
-        .should.eventually.be.rejectedWith("Page Not Found!")
+        .should.eventually.be.rejectedWith(Error)
         .and.notify(done);
     })
 
     it("should throw an when creating for missing url/names", function(done){
-     (function(){
-        new Review()
-      }).should.throw(Error);
+     (function(){return new Review() }).should.throw(Error);
       done();
     })
 
