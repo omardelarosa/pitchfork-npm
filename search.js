@@ -1,9 +1,15 @@
 var request = require('superagent');
 var q = require('q');
 var Review = require('./review.js');
+var util = require('util');
+var EventEmitter = require('events').EventEmitter;
 
-// globals
-var version = require('./package').version;
+// global constants
+var VERSION = require('./package').version;
+var USER_AGENT = 'omardelarosa/pitchfork-npm-v'+VERSION;
+var BASE_URL = "http://pitchfork.com/search/ac/?query=";
+var CONNECTION_ERR = new Error("Failed to connect to Pitchfork!");
+
 
 // extracts the first review inside of 
 function get_review_objects(responseBody){
@@ -22,6 +28,9 @@ function get_review_objects(responseBody){
 
 /**
   * Conducts a new search
+  *
+  * @constructor extends {EventEmitter}
+  *
   * @param {string} artist - a musical artist likely to be reviewed on Pitchfork
   * @param {string} album - an album by the given artist
   *
@@ -48,17 +57,28 @@ function Search(artist, album, cb){
 
 }
 
+// extends EventEmitter
+util.inherits(Search, EventEmitter);
+
+/**
+  * Runs a search and emits a "ready" event.
+  * @public
+  * @type {Promise}
+  */
+
 Search.prototype.init = function(){
   var self = this;
   var query = [self.query.artist,"%20",self.query.album].join("").replace(/\s+/,"%20");
   // create a deferred obj
   var dfd = q.defer();
 
-  request.get("http://pitchfork.com/search/ac/?query="+query)
-    .set('User-Agent', 'omardelarosa/pitchfork-npm-v'+version)
+  request.get(BASE_URL+query)
+    .set('User-Agent', USER_AGENT)
     .end(function(res) {
       if (res.statusCode != 200) {
-        dfd.reject("Failed to connect to Pitchfork!");
+        self.emit("error", CONNECTION_ERR)
+        cb(CONNECTION_ERR)
+        return dfd.reject(CONNECTION_ERR);
       } else {
         var reviews = get_review_objects(res.body)
         // if there are no matches...
