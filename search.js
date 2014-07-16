@@ -1,14 +1,14 @@
-var request = require('superagent');
-var q = require('q');
-var Review = require('./review.js');
-var util = require('util');
-var EventEmitter = require('events').EventEmitter;
+var request = require('superagent')
+  , q = require('q')
+  , Review = require('./review.js')
+  , util = require('util')
+  , EventEmitter = require('events').EventEmitter;
 
 // global constants
-var VERSION = require('./package').version;
-var USER_AGENT = 'omardelarosa/pitchfork-npm-v'+VERSION;
-var BASE_URL = "http://pitchfork.com/search/ac/?query=";
-var CONNECTION_ERR = new Error("Failed to connect to Pitchfork!");
+var VERSION = require('./package').version
+  , USER_AGENT = 'omardelarosa/pitchfork-npm-v'+VERSION
+  , BASE_URL = "http://pitchfork.com/search/ac/?query="
+  , CONNECTION_ERR = new Error("Failed to connect to Pitchfork!");
 
 
 // extracts the first review inside of 
@@ -67,10 +67,10 @@ util.inherits(Search, EventEmitter);
   */
 
 Search.prototype.init = function(){
-  var self = this;
-  var query = [self.query.artist,"%20",self.query.album].join("").replace(/\s+/,"%20");
+  var self = this
+    , query = [self.query.artist,"%20",self.query.album].join("").replace(/\s+/,"%20")
   // create a deferred obj
-  var dfd = q.defer();
+    , dfd = q.defer();
 
   request.get(BASE_URL+query)
     .set('User-Agent', USER_AGENT)
