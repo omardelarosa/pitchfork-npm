@@ -10,7 +10,10 @@ describe("Review", function(){
 
   describe("when a valid url and name are given", function(){
 
-    var review;
+    var review = new Review({
+        url: "/reviews/albums/19466-mogwai-come-on-die-young-deluxe-edition/",
+        name: 'Mogwai - Come On Die Young '
+      })
 
     xit("should have a .name", function(done){
 
@@ -21,22 +24,12 @@ describe("Review", function(){
     })
 
     it("should #fetch the review", function(done){
-      
-      review = new Review({
-        url: "/reviews/albums/19466-mogwai-come-on-die-young-deluxe-edition/",
-        name: 'Mogwai - Come On Die Young '
-      })
-
-      review.fetch().should.eventually.have.property("html").and.notify(done);
+      review.promise.should.eventually.be.fulfilled.and.notify(done);
     })
 
-    describe("after review is fetched", function(){
-
-      it("the review's title should be for the correct album", function(done){
-        review.$('title').text().should.include('Mogwai: Come On Die Young');
-        done();
-      })
-    
+    it("the review's title should be for the correct album", function(done){
+      review.attributes.fullTitle.should.include('Mogwai: Come On Die Young');
+      done();
     })
 
   })
@@ -50,7 +43,7 @@ describe("Review", function(){
         url: "/reviews/fffffff-fffffff/",
         name: 'Fakey - McFake'
       })
-      review.fetch()
+      review.promise
         .should.eventually.be.rejectedWith("Page Not Found!")
         .and.notify(done);
     })

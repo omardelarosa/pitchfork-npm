@@ -1,10 +1,13 @@
-var s = require('./search');
-var request = require('superagent');
-var q = require('q');
-var cheerio = require('cheerio');
+var Search = require('./search')
+  , request = require('superagent')
+  , util = require('util')
+  , EventEmitter = require('events').EventEmitter
+  , q = require('q')
+  , cheerio = require('cheerio');
 
-// globals
-var version = require('./package').version;
+// global constants
+var VERSION = require('./package').version;
+var BASE_URL = 'http://pitchfork.com';
 
 /**
   * A Review instance
@@ -17,27 +20,29 @@ function Review(attributes){
   if (!attributes || !attributes.url || !attributes.name) {
     throw new Error("Review cannot be found without a 'url' and 'name'!");
   }
-  var self;
+  var self = this;
   this.attributes = attributes;
   this.url = attributes.url;
   this.name = attributes.name;
   this.matched_artist = this.name.split(' - ')[0];
   this.matched_album = this.name.split(' - ')[1];
-  this.fullUrl = ['http://pitchfork.com', this.url].join("");
-  // if artist and album are passed in as attributes
-  
+  this.attributes.artist = this.matched_artist;
+  this.attributes.album = this.matched_album;
+  this.fullUrl = [BASE_URL, this.url].join("");
+  // fetches on initialization and saves to .promise
+  this.promise = this.fetch()
 }
 
 /**
   * Grabs the HTML of the review from Pitchfork
   *
-  * @param cb {Function} - a callback function that fires when fetch is complete
-  *
+  * @public
+  * @type {Promise}
   */
 
-Review.prototype.fetch = function(cb){
-  var dfd = q.defer();
-  var self = this;
+Review.prototype.fetch = function(){
+  var dfd = q.defer()
+    , self = this;
 
   /**
     * Parses the HTML received after fetch and sets attributes
@@ -45,7 +50,7 @@ Review.prototype.fetch = function(cb){
     */
 
   function parseHtml(){
-
+    self.attributes.fullTitle = self.$("title").text();
   }
 
   request.get(this.fullUrl)
@@ -53,12 +58,11 @@ Review.prototype.fetch = function(cb){
     self.html = res.text;
     self.$ = cheerio.load(self.html);
     // set attributes from html
-    self.title = self.$("title").text();
+    parseHtml();
     // TODO parse other attributes;
-    if (self.title == "Page Not Found") {
+    if (self.attributes.fullTitle == "Page Not Found") {
       dfd.reject("Page Not Found!");
     } else {
-      if (cb){ return cb(self); }
       return dfd.resolve(self)
     }
   })

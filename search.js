@@ -97,6 +97,8 @@ Search.prototype.init = function(){
             self.results.push(new Review(review));
           });
         }  
+        // emit ready event
+        self.emit("ready", self.results);
         if (self.query.cb) { self.query.cb(results); }
         return dfd.resolve(self.results); 
       }
