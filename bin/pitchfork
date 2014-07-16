@@ -1,7 +1,9 @@
 #!/usr/bin/env node
-var async = require('async');
+
+/**
+  * Simple Command-Line Wrapper for the main Pitchfork Module (../index.js)
+  */
+
 var fork = require('child_process').fork
 
-var origArgs = process.argv;
-
-var f = fork("./index", origArgs);
+var f = fork("./index", process.argv);
