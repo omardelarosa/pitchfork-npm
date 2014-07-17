@@ -9,6 +9,8 @@ chai.use(chaiAsPromised)
 
 describe("Search", function(){
 
+  this.timeout(10000);
+
   var search = new Search("mogwai", "come on")
 
   it("should return an instance of {Search}", function(done){

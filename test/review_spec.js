@@ -8,6 +8,8 @@ chai.use(chaiAsPromised);
 
 describe("Review", function(){
 
+  this.timeout(10000);
+
   describe("when a valid url and name are given", function(){
 
     var review = new Review({
