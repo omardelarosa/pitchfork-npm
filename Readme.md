@@ -135,11 +135,22 @@ Prints a plain-text representation of the review.
 
 ## CLI (Command-Line Interface)
 
-Returns a review for a given artist.
+Returns a review for a given artist and album title.
 
 ```bash
 $ pitchfork -a 'wilco' -t 'yankee hotel foxtrot'
 # { ... pretty-printed, colorized quasi-JSON object... }
+```
+
+Returns a list of reviews for a given artist with no album.
+
+```bash
+$ pitchfork -a 'wilco'
+# [ 
+#    { ... pretty-printed, colorized quasi-JSON object... },
+#    { ... pretty-printed, colorized quasi-JSON object... },
+#    { ... pretty-printed, colorized quasi-JSON object... }
+# ]
 ```
 
 For valid, uncolored JSON, use the --json flag:
