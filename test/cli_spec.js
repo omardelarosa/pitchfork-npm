@@ -20,6 +20,8 @@ chai.use(require('chai-as-promised'))
 
 describe("CLI (Command Line Tool)", function(){
 
+  this.timeout(10000);
+
   before(function(done){
     search = new Pitchfork.Search(artist_name, album_title);
     search.promise.then(function(){
@@ -32,23 +34,23 @@ describe("CLI (Command Line Tool)", function(){
 
   describe("when searching for a valid artist and album", function(){
 
-    it("should return truncated and valid json by default", function(done){
+    it("should return all attributes and valid json by default", function(done){
       var proc = execFile(cli_filepath, valid_args, function(err, stdout, stderr){
-        expect(stdout).to.equal(JSON.stringify(review.truncated())+"\n")
+        expect(stdout).to.equal(JSON.stringify(review.attributes)+"\n")
         done();
       })
     })
 
-    it("should return full and valid json when -v flag is passed", function(done){
+    it("should return entire review object and valid json when -v flag is passed", function(done){
       var proc = execFile(cli_filepath, verbose_args, function(err, stdout, stderr){
-        expect(stdout).to.equal(JSON.stringify(review.attributes)+"\n")
+        expect(stdout).to.equal(JSON.stringify(review.verbose())+"\n")
         done();
       })
     })
 
   })
 
-  describe("when searching for no artist and no album", function(){
+  describe("and when searching for no artist and no album", function(){
 
     it("should return usage when no flags are passed", function(done){
       var proc = execFile(cli_filepath, [], function(err, stdout, stderr){

@@ -7,7 +7,7 @@ chai.should()
 chai.use(chaiAsPromised)
 
 
-describe("Searching for a review", function(){
+describe("Search", function(){
 
   var search = new Search("mogwai", "come on")
 
@@ -16,7 +16,7 @@ describe("Searching for a review", function(){
     done();
   })
 
-  describe("when the artist and album are given", function(){
+  describe("and when the artist and album are given", function(){
 
     var search = new Search("mogwai", "come on")
 
@@ -33,7 +33,7 @@ describe("Searching for a review", function(){
 
   })
 
-  describe("when only the artist is given", function(){
+  describe("and when only the artist is given", function(){
 
     var search = new Search("mogwai")
 

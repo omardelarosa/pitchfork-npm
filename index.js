@@ -2,31 +2,42 @@ var request = require('superagent')
   , q = require('q')
   , async = require('async')
   , origArgs = process.argv
+  , _ = require('lodash')
   , Pitchfork = {
       Search: require('./search'),
       Review: require('./review')
     };
 
 // global constants
-var USAGE = "usage: pitchfork [-hVv] -a ARTIST_NAME -t ALBUM_TITLE";
+var USAGE = "usage: pitchfork [-hTvV] [--text] -a ARTIST_NAME -t ALBUM_TITLE";
 var VERSION = require("./package").version;
 
 function parse_args(args){
-  var artistFlagIdx = args.indexOf("-a")
-  var albumTitleIdx = args.indexOf("-t")
 
-  if ( artistFlagIdx != -1 ) {
-    var artist = args[artistFlagIdx+1]
+  function has_flags(flags, opts){
+    return _.some(flags, function(flag){ 
+        return args.indexOf(flag) != -1
+      });
   }
-  if ( albumTitleIdx != -1 ) {
-    var album = args[albumTitleIdx+1]
+
+  var artistIdx = args.indexOf("-a");
+  var titleIdx = args.indexOf("-t");
+
+  if ( artistIdx != -1 ) {
+    var artist = args[artistIdx+1]
   }
+  if ( titleIdx != -1 ) {
+    var album = args[artistIdx+1]
+  }
+
   return {
     artist: artist,
     album: album,
-    json: args.indexOf("--json") != -1,
-    verbose: args.indexOf("-v") != -1,
-    version: args.indexOf("-V") != -1
+    json: has_flags(["-j","--json"]),
+    verbose: has_flags(["-v", "--verbose"]),
+    version: has_flags(["-V", "--version"]),
+    truncated: has_flags(["-T","--truncated"]),
+    justText: has_flags(["-tx", "--text"])
   }
 }
 
@@ -37,6 +48,8 @@ var album = opts.album || null;
 var json = opts.json || false;
 var verbose = opts.verbose || false;
 var version = opts.version || false;
+var truncated = opts.truncated || false;
+var justText = opts.justText;
 
 // if there are args (i.e. running in commandline mode)
 
@@ -55,9 +68,13 @@ if (origArgs.indexOf("-h") != -1 || origArgs.length == 4) {
       var review = search.results[0];
       review.promise.then(function(){
         if (json || verbose) {
-          console.log(JSON.stringify(review.attributes))
-        } else {
+          console.log(JSON.stringify(review.verbose()));
+        } else if (truncated) {
           console.log(JSON.stringify(review.truncated()));
+        } else if (justText) {
+          console.log(review.text_pretty_print());
+        } else {
+          console.log(JSON.stringify(review.attributes));
         }
       })
     })

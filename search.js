@@ -31,9 +31,9 @@ function get_review_objects(responseBody){
   *
   * @constructor extends {EventEmitter}
   *
-  * @param {string} artist - a musical artist likely to be reviewed on Pitchfork
-  * @param {string} album - an album by the given artist
-  *
+  * @param {String} artist - a musical artist likely to be reviewed on Pitchfork
+  * @param {String} album - an album by the given artist
+  * @param {Function} cb - a callback that fires when search is complete
   * returns {Promise}
   */
 
@@ -88,13 +88,18 @@ Search.prototype.init = function(){
         // if there are some matches and an album was entered
         } else if (reviews.length > 0 && self.query.album) {
           // return a single review object with that album
-          self.results = [new Review(reviews[0])];
+          var r = new Review(reviews[0]);
+          // create reference to search in review.
+          r.search = self;
+          self.results = [r];
           // if there are multiple matches and no album was entered
         } else {
           // return an array of albums
           self.results = [];
           reviews.forEach(function(review){
-            self.results.push(new Review(review));
+            var r = new Review(review);
+            r.search = self;
+            self.results.push(r);
           });
         }  
         // emit ready event
