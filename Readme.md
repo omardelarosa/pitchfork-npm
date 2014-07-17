@@ -12,7 +12,7 @@ npm install pitchfork
 ```bash
 git clone git@github.com:omardelarosa/pitchfork-npm.git
 ```
-You can then use it as a [command-line tool](#CLI) or as a [node module](#API)
+You can then use it as a [command-line tool](#cli-command-line-interface) or as a [node module](#api)
 
 ##API
 
