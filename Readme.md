@@ -14,14 +14,27 @@ You can then use it as a [command-line tool](#CLI) or as a [node module](#API)
 
 ##API
 
+You can require ``pitchfork`` and use it inside of any Node.JS application.
+
 ```javascript
-var pitchfork = require('pitchfork')
-var search = new pitchfork.Search("wilco", "sky blue sky")
+var p4k = require('pitchfork)
 ```
 
 ### Search
 
-A search object
+A {Search} constructor that extends [EventEmitter](http://nodejs.org/api/events.html#events_class_events_eventemitter).  Listeners can be attached to the 'ready' event which will fire when all reviews have been fetched and parsed.  For example:
+
+```javascript
+
+var p = require('pitchfork)
+var s = new p.Search('wilco')
+
+s.on('ready', function(results){
+  console.log("results", results)
+})
+
+//=> [ {Review}, {Review}, {Review}, ... ]
+```
 
 ``.results``
 
@@ -33,7 +46,7 @@ Called once when Search is instantiated to fetch results.  Not usually called di
 
 ### Review
 
-The {Review} constructor encapsulates methods and data relating to the Pitchfork review.
+The {Review} constructor encapsulates methods and data relating to the Pitchfork review.  The {Review} extends {EventEmitter} and fires a 'ready' event when the review has been fetched and parsed.
 
 
 ``.attributes``

@@ -121,8 +121,6 @@ Search.prototype.init = function(){
             return dfd.resolve(self.results); 
           })
         }  
-        // emit ready event
-        
         
       }
     })
