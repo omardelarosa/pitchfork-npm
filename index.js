@@ -29,7 +29,7 @@ function parse_args(args){
     var artist = args[artistIdx+1]
   }
   if ( titleIdx != -1 ) {
-    var album = args[artistIdx+1]
+    var album = args[titleIdx+1]
   }
 
   return {

@@ -41,22 +41,20 @@ The {Review} constructor encapsulates methods and data relating to the Pitchfork
 
 An {Object} with information about the album and its text.  Sample below:
 
-```
+```json
 {
-  "url": "/reviews/albums/19466-mogwai-come-on-die-young-deluxe-edition/",
-  "name": "Mogwai - Come On Die Young ",
-  "artist": "Mogwai",
-  "album": "Come On Die Young",
-  "title": "Mogwai: Come On Die Young | Album Reviews | Pitchfork",
-  "label": "Chemikal Underground",
-  "year": "1999/2014",
-  "score": 8.3,
-  "cover": "http://cdn3.pitchfork.com/albums/20688/homepage_large.2ac360a5.jpg",
+  "url": "/reviews/albums/9419-the-letting-go/",
+  "name": "Bonnie \"Prince\" Billy - The Letting Go",
+  "artist": "Bonnie \"Prince\" Billy",
+  "album": "The Letting Go",
+  "title": "Bonnie \"Prince\" Billy: The Letting Go | Album Reviews | Pitchfork",
+  "label": "Palace / Drag City",
+  "year": "2006",
+  "score": 8.2,
+  "cover": "http://cdn.pitchfork.com/albums/9255/homepage_large.e8a2bd20.jpg",
   "author": "Mark Richardson",
-  "date": "June 18, 2014",
-  "editorial": {
-    "text": " Though few of their songs contain actual words, Mogwai have always been fond of big statements. Having emerged during the late-1990s post-rock boom, the Scottish quintet used every means possible to distance themselves from the sullen stereotype that defined so many instrumental art-rock brooders o...",
-    "html": "<p>Though few of their songs contain actual words, Mogwai have always been fond of big statements. Having emerged during the late-1990s post-rock boom, the Scottish quintet used every means possible to distance themselves from the sullen stereotype that defined so many instrumental art-rock brooders of their era. EP titles were <a href=\"http://en.wikipedia.org/wiki/No_Education_%3D_No_Future_(Fuck_the_Curfew)\" target=\"_blank\" rel=\"nofollow\">"
+  "date": "September 18, 2006",
+  "text": " Though Will Oldham began his musical career while in his early twenties, he's never exactly sounded young. From his first releases as Palace Music, Oldham's whiskey-soaked vocals and lyrical obsessions with death, sex, and religion have made \"maturity\" something of a non-issue. And yet, with his mo..."
 }
 ```
 
@@ -104,5 +102,5 @@ $ pitchfork -a 'radiohead' -t 'ok computer'
 | -v, --verbose  |  |    |  returns review entire object as json |
 | -V, --version   |  |    | returns version number |
 | -T,--truncated |  |    |  returns a truncated json object of the review attributes | 
-| -tx,--text      |  |    | returns a text version of review (hint: pipe output to less ) |
+| -tx,--text      |  |    | returns a text version of review (ex: to pipe output to 'less' ) |
 
