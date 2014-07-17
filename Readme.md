@@ -1,8 +1,24 @@
 #Pitchfork Client
 
-An unofficial Pitchfork API client for Node.js based on the [Pitchfork API Client for Python](https://github.com/michalczaplinski/pitchfork).
+An unofficial Node.js client for [Pitchfork](http://pitchfork.com/) reviews based on the [Pitchfork API Client for Python](https://github.com/michalczaplinski/pitchfork).
 
-## API
+## Install
+
+```
+npm install pitchfork
+var pitchfork = require('pitchfork')
+
+```
+
+You can then use it as a [command-line tool](#CLI) or as a [node module](#API)
+
+##API
+
+```
+var pitchfork = require('pitchfork')
+var search = new pitchfork.Search("wilco", "sky blue sky")
+
+```
 
 ### Search
 

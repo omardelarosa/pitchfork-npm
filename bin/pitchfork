@@ -4,6 +4,4 @@
   * Simple Command-Line Wrapper for the main Pitchfork Module (../index.js)
   */
 
-var fork = require('child_process').fork
-
-var f = fork("./index", process.argv);
+require('child_process').fork("./index", process.argv);
