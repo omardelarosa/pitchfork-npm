@@ -61,14 +61,14 @@ describe("CLI (Command Line Tool)", function(){
 
     it("should return usage when no flags are passed", function(done){
       var proc = execFile(cli_filepath, [], function(err, stdout, stderr){
-        expect(stdout).to.equal(Pitchfork.USAGE+"\n")
+        expect(stdout).to.equal("usage: pitchfork [-hjTvV] [-tx, --text] -a ARTIST_NAME -t ALBUM_TITLE\n")
         done();
       })
     })
 
     it("should return the right version when -V flag is passed", function(done){
       var proc = execFile(cli_filepath, ["-V"], function(err, stdout, stderr){
-        expect(stdout).to.equal(Pitchfork.VERSION+"\n")
+        expect(stdout).to.equal(require("../package").version+"\n")
         done();
       })
     })
