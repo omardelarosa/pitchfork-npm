@@ -1,4 +1,5 @@
 #Pitchfork Client
+![Travis CI](https://travis-ci.org/omardelarosa/pitchfork-npm.svg?branch=master)
 
 An unofficial Node.js client for [Pitchfork](http://pitchfork.com/) reviews based on the [Pitchfork API Client for Python](https://github.com/michalczaplinski/pitchfork).
 
