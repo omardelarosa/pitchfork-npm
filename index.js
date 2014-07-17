@@ -77,6 +77,7 @@ if (origArgs.indexOf("-h") != -1 || origArgs.length == 4) {
         if (verbose) { output = review.verbose(); } 
         if (json) { printer = JSON.stringify; } 
         if (truncated) { output = review.truncated(); } 
+
         if (justText) {
           output = review.text_pretty_print();
           printer = function(o){ return o; }
@@ -85,7 +86,15 @@ if (origArgs.indexOf("-h") != -1 || origArgs.length == 4) {
         output = output || review.attributes;
         printer = printer || prettyjson.render;
 
-        console.log(printer(output))
+        // if no album was specified...
+        if (!album) { 
+          var reviews = [];
+          search.results.forEach(function(result){
+            reviews.push(result.truncated())
+          }) 
+          // print a list of reviews
+          console.log(printer(reviews));
+        } else { console.log(printer(output)) }
       })
     })
 }
