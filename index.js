@@ -1,22 +1,24 @@
 var request = require('superagent')
+  , exec = require('child_process').exec
   , q = require('q')
   , async = require('async')
   , origArgs = process.argv
   , _ = require('lodash')
+  , prettyjson = require('prettyjson')
   , Pitchfork = {
       Search: require('./search'),
       Review: require('./review')
     };
 
 // global constants
-var USAGE = "usage: pitchfork [-hTvV] [--text] -a ARTIST_NAME -t ALBUM_TITLE";
+var USAGE = "usage: pitchfork [-hjTvV] [-tx, --text] -a ARTIST_NAME -t ALBUM_TITLE";
 var VERSION = require("./package").version;
 
 function parse_args(args){
 
   function has_flags(flags, opts){
     return _.some(flags, function(flag){ 
-        return args.indexOf(flag) != -1
+        return args.indexOf(flag) != -1;
       });
   }
 
@@ -51,7 +53,6 @@ var version = opts.version || false;
 var truncated = opts.truncated || false;
 var justText = opts.justText;
 
-// if there are args (i.e. running in commandline mode)
 
 // if in "help mode"
 if (origArgs.indexOf("-h") != -1 || origArgs.length == 4) {
@@ -64,18 +65,27 @@ if (origArgs.indexOf("-h") != -1 || origArgs.length == 4) {
 } else if (artist || album) {
    search = new Pitchfork.Search(artist, album);
     search.promise.then(function(){
-      // console.log(JSON.stringify(s.results[0]));
+      if (search.results.length == 0) { 
+        console.log("Your search returned no results!  Please try a differnt query.")
+        return;
+      }
       var review = search.results[0];
       review.promise.then(function(){
-        if (json || verbose) {
-          console.log(JSON.stringify(review.verbose()));
-        } else if (truncated) {
-          console.log(JSON.stringify(review.truncated()));
-        } else if (justText) {
-          console.log(review.text_pretty_print());
-        } else {
-          console.log(JSON.stringify(review.attributes));
-        }
+        var output
+          , printer;
+
+        if (verbose) { output = review.verbose(); } 
+        if (json) { printer = JSON.stringify; } 
+        if (truncated) { output = review.truncated(); } 
+        if (justText) {
+          output = review.text_pretty_print();
+          printer = function(o){ return o; }
+        } 
+        
+        output = output || review.attributes;
+        printer = printer || prettyjson.render;
+
+        console.log(printer(output))
       })
     })
 }

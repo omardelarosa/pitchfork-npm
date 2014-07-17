@@ -1,13 +1,11 @@
 var execFile = require('child_process').execFile
-var child;
-var path = require('path');
-var chai = require('chai');
-var assert = require('chai').assert;
-var expect = require('chai').expect;
-var sinon  = require("sinon");
-var Pitchfork = require("../index");
+  , path = require('path')
+  , chai = require('chai')
+  , prettyjson = require('prettyjson')
+  , expect = chai.expect
+  , Pitchfork = require("../index");
 
-// GLOBAL CONSTANTS
+// globals
 var cli_filepath = path.resolve(__dirname+"/../bin/pitchfork");
 var artist_name = "mogwai";
 var album_title = "come on";
@@ -34,8 +32,17 @@ describe("CLI (Command Line Tool)", function(){
 
   describe("when searching for a valid artist and album", function(){
 
-    it("should return all attributes and valid json by default", function(done){
+    it("should return all attributes and pretty json by default", function(done){
       var proc = execFile(cli_filepath, valid_args, function(err, stdout, stderr){
+        expect(stdout).to.equal(prettyjson.render(review.attributes)+"\n")
+        done();
+      })
+    })
+
+    it("should return all attributes and valid, ugly json with --json flag", function(done){
+      var newArgs = valid_args
+      newArgs.push("--json")
+      var proc = execFile(cli_filepath, newArgs , function(err, stdout, stderr){
         expect(stdout).to.equal(JSON.stringify(review.attributes)+"\n")
         done();
       })
@@ -43,7 +50,7 @@ describe("CLI (Command Line Tool)", function(){
 
     it("should return entire review object and valid json when -v flag is passed", function(done){
       var proc = execFile(cli_filepath, verbose_args, function(err, stdout, stderr){
-        expect(stdout).to.equal(JSON.stringify(review.verbose())+"\n")
+        expect(stdout).to.equal(prettyjson.render(review.verbose())+"\n")
         done();
       })
     })
@@ -62,6 +69,18 @@ describe("CLI (Command Line Tool)", function(){
     it("should return the right version when -V flag is passed", function(done){
       var proc = execFile(cli_filepath, ["-V"], function(err, stdout, stderr){
         expect(stdout).to.equal(Pitchfork.VERSION+"\n")
+        done();
+      })
+    })
+
+  })
+
+  describe("and when searching for non-existant artist and albums", function(){
+
+    it("should respond with a message", function(done){
+      var message = "Your search returned no results!  Please try a differnt query.";
+      var proc = execFile(cli_filepath, ["-a", "ffjfkdkdd"], function(err, stdout, stderr){
+        expect(stdout).to.equal(message+"\n")
         done();
       })
     })
