@@ -6,7 +6,6 @@ An unofficial Node.js client for [Pitchfork](http://pitchfork.com/) reviews base
 
 ```
 npm install pitchfork
-var pitchfork = require('pitchfork')
 
 ```
 
@@ -17,7 +16,7 @@ You can then use it as a [command-line tool](#CLI) or as a [node module](#API)
 You can require ``pitchfork`` and use it inside of any Node.JS application.
 
 ```javascript
-var p4k = require('pitchfork)
+var p4k = require('pitchfork')
 ```
 
 ### Search
@@ -26,7 +25,7 @@ A {Search} constructor that extends [EventEmitter](http://nodejs.org/api/events.
 
 ```javascript
 
-var p = require('pitchfork)
+var p = require('pitchfork')
 var s = new p.Search('wilco')
 
 s.on('ready', function(results){
