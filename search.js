@@ -2,6 +2,7 @@ var request = require('superagent')
   , q = require('q')
   , Review = require('./review.js')
   , util = require('util')
+  , async = require('async')
   , EventEmitter = require('events').EventEmitter;
 
 // global constants
@@ -85,6 +86,9 @@ Search.prototype.init = function(){
         if (reviews.length === 0) {
           // ...return no results
           self.results = [];
+          self.emit("ready", self.results);
+          if (self.query.cb) { self.query.cb(results); }
+          return dfd.resolve(self.results); 
         // if there are some matches and an album was entered
         } else if (reviews.length > 0 && self.query.album) {
           // return a single review object with that album
@@ -92,20 +96,34 @@ Search.prototype.init = function(){
           // create reference to search in review.
           r.search = self;
           self.results = [r];
+          self.emit("ready", self.results);
+          if (self.query.cb) { self.query.cb(results); }
+          return dfd.resolve(self.results); 
           // if there are multiple matches and no album was entered
         } else {
           // return an array of albums
           self.results = [];
+          var tasks = []
           reviews.forEach(function(review){
-            var r = new Review(review);
-            r.search = self;
-            self.results.push(r);
+            var rev = review
+            tasks.push(function(done){
+              var r = new Review(rev)
+              r.search = self;
+              r.promise.then(function(revObj){
+                self.results.push(r)
+                done(null, revObj);
+              })
+            })
           });
+          async.parallel(tasks, function(){
+            self.emit("ready", self.results);
+            if (self.query.cb) { self.query.cb(results); }
+            return dfd.resolve(self.results); 
+          })
         }  
         // emit ready event
-        self.emit("ready", self.results);
-        if (self.query.cb) { self.query.cb(results); }
-        return dfd.resolve(self.results); 
+        
+        
       }
     })
   return dfd.promise;

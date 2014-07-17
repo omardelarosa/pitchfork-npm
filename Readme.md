@@ -17,7 +17,6 @@ You can then use it as a [command-line tool](#CLI) or as a [node module](#API)
 ```javascript
 var pitchfork = require('pitchfork')
 var search = new pitchfork.Search("wilco", "sky blue sky")
-
 ```
 
 ### Search
@@ -86,9 +85,8 @@ Prints a plain-text representation of the review.
 Returns a review for a given artist.
 
 ```bash
-$ pitchfork -a 'radiohead' -t 'ok computer'
 
-{ name: }
+$ pitchfork -a 'wilco' -t 'yankee hotel foxtrot'
 
 ```
 
