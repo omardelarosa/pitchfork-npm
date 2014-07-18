@@ -24,14 +24,28 @@ function parse_args(args){
       });
   }
 
-  var artistIdx = args.indexOf("-a");
-  var titleIdx = args.indexOf("-t");
-
-  if ( artistIdx != -1 ) {
-    var artist = args[artistIdx+1]
+  // if the 1st argument is not a flag.
+  if (!!args[2] && args[2][0] !== "-") {
+    // it beocomes the artist
+    var artist = args[2];
+  } else {
+    // find the value paired with the -a flag
+    var artistIdx = args.indexOf("-a");
+    if ( artistIdx != -1 ) {
+      var artist = args[artistIdx+1]
+    }
   }
-  if ( titleIdx != -1 ) {
-    var album = args[titleIdx+1]
+
+  // if the 2nd argument is not a flag.
+  if (!!args[3] && args[3][0] !== "-") {
+    // it becomes the album
+    var album = args[3]
+  } else {
+    // find the value paired with the -t flag
+    var titleIdx = args.indexOf("-t");
+    if ( titleIdx != -1 ) {
+      var album = args[titleIdx+1]
+    }
   }
 
   return {
@@ -42,7 +56,7 @@ function parse_args(args){
     version: has_flags(["-V", "--version"]),
     truncated: has_flags(["-T","--truncated"]),
     justText: has_flags(["-tx", "--text"])
-  }
+  };
 }
 
 void function main(origArgs) {
@@ -60,16 +74,16 @@ void function main(origArgs) {
   // if in "help mode"
   if (origArgs.indexOf("-h") != -1 || origArgs.length == 2) {
     // display usage
-    console.log(USAGE)
+    console.log(USAGE);
 
   // if there's an artist and/or album
   } else if (version) {
-    console.log(VERSION)
+    console.log(VERSION);
   } else if (artist || album) {
      search = new Pitchfork.Search(artist, album);
       search.promise.then(function(){
-        if (search.results.length == 0) { 
-          console.log("Your search returned no results!  Please try a differnt query.")
+        if (search.results.length === 0) {
+          console.log("Your search returned no results!  Please try a differnt query.");
           return;
         }
         var review = search.results[0];
@@ -77,28 +91,28 @@ void function main(origArgs) {
           var output
             , printer;
 
-          if (verbose) { output = review.verbose(); } 
-          if (json) { printer = JSON.stringify; } 
-          if (truncated) { output = review.truncated(); } 
+          if (verbose) { output = review.verbose(); }
+          if (json) { printer = JSON.stringify; }
+          if (truncated) { output = review.truncated(); }
 
           if (justText) {
             output = review.text_pretty_print();
-            printer = function(o){ return o; }
-          } 
+            printer = function (o) { return o; };
+          }
           
           output = output || review.attributes;
           printer = printer || prettyjson.render;
 
           // if no album was specified...
-          if (!album) { 
+          if (!album) {
             var reviews = [];
-            search.results.forEach(function(result){
-              reviews.push(result.truncated())
-            }) 
+            search.results.forEach(function (result) {
+              reviews.push(result.truncated());
+            });
             // print a list of reviews
             console.log(printer(reviews));
-          } else { console.log(printer(output)) }
-        })
-      })
-  };
-}(process.argv)
+          } else { console.log(printer(output)); }
+        });
+      });
+  }
+}(process.argv);

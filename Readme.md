@@ -143,7 +143,13 @@ Prints a plain-text representation of the review.
 Returns a review for a given artist and album title.
 
 ```bash
-$ pitchfork -a 'wilco' -t 'yankee hotel foxtrot'
+$ pitchfork wilco 'yankee hotel foxtrot'
+# { ... pretty-printed, colorized quasi-JSON object... }
+```
+or you can use -a and -t flags.
+
+```bash
+$ pitchfork -a wilco -t 'yankee hotel foxtrot'
 # { ... pretty-printed, colorized quasi-JSON object... }
 ```
 
