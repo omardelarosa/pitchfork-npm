@@ -91,7 +91,7 @@ describe("CLI (Command Line Tool)", function(){
 
     it("should return usage when no flags are passed", function(done){
       var proc = execFile(cli_filepath, [], function(err, stdout, stderr){
-        expect(stdout).to.equal("usage: pitchfork [-hjTvV] [-tx, --text] -a ARTIST_NAME -t ALBUM_TITLE\n")
+        expect(stdout).to.equal("usage: pitchfork [-hjTvVp] [-tx, --text] -a ARTIST_NAME -t ALBUM_TITLE\n")
         done();
       })
     })

@@ -48,6 +48,22 @@ An ``Array`` of ``Review`` objects.
 
 Called once when Search is instantiated to fetch results.  Not usually called directly
 
+### Page
+
+A ``Page`` constructor that extends [EventEmitter](http://nodejs.org/api/events.html#events_class_events_eventemitter).  This constructor takes an integer argument specifying which page of reviews you wish to fetch from ``/reviews/albums/:page_num``. Listeners can be attached to the 'ready' event which will fire when all reviews have been fetched and parsed.  For example, this would return all the most recent reviews:
+
+```javascript
+
+var p = require('pitchfork')
+var s = new p.Page(1)
+
+s.on('ready', function(results){
+  console.log("results", results)
+})
+
+//=> [ {Review}, {Review}, {Review}, ... ]
+```
+
 ### Review
 
 The ``Review`` constructor encapsulates methods and data relating to the Pitchfork review.  The ``Review`` extends ``EventEmitter`` and fires a 'ready' event when the review has been fetched and parsed.
@@ -182,4 +198,5 @@ $ pitchfork -a 'wilco' -t 'yankee hotel foxtrot' --json
 | -V, --version   |  |    | returns version number |
 | -T,--truncated |  |    |  returns a truncated json object of the review attributes | 
 | -tx,--text      |  |    | returns a text version of review (ex: to pipe output to 'less' ) |
+| -p           | | page_number | returns a list of reviews located on the specified page
 

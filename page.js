@@ -1,10 +1,11 @@
-var p4k = require('./index')
-var Review = p4k.Review
+var p = require('./index')
+var Review = require('./review')
 var request = require('superagent')
 var q = require('q')
 var async = require('async')
 var cheerio = require('cheerio')
 var EventEmitter = require('events').EventEmitter;
+var util = require('util')
 
 // global constants
 var VERSION = require('./package').version
@@ -19,12 +20,10 @@ var VERSION = require('./package').version
   */
 
 function Page (number) {
-  
+  this.responseStatus = null;
   this.number = number;
-
-  this.reviews = [];
-
-  this.init();
+  this.results = [];
+  this.promise = this.init();
   
 }
 
@@ -38,7 +37,8 @@ Page.prototype.init = function(){
   request.get(BASE_URL+this.number)
     .set('User-Agent', USER_AGENT)
     .end(function(res){
-       if (res.statusCode != 200) {
+      self.responseStatus = res.statusCode
+       if (self.responseStatus != 200) {
         self.emit("error", CONNECTION_ERR)
         cb(CONNECTION_ERR)
         return dfd.reject(CONNECTION_ERR);
@@ -58,7 +58,6 @@ Page.prototype.init = function(){
           })
           i++
         }
-        console.log("reviews", reviewQueries)
 
         var jobs = [];
 
@@ -71,16 +70,18 @@ Page.prototype.init = function(){
             })
 
             r.promise.then(function(rev){
-              self.reviews.push(rev)
-              done(null, review)
+              self.results.push(rev)
+              done(null, rev)
             })
           })
 
         })
 
         async.parallel(jobs, function(err, results){
-          if (err) throw err;
-          console.log("results", results)
+          if (err) { 
+            self.emit("error");
+            dfd.reject(err);
+          }
           self.emit("ready")
           dfd.fulfill(results)
         })

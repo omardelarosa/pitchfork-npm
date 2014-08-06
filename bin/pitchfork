@@ -13,7 +13,7 @@ var request = require('superagent')
   , Pitchfork = require('../index');
 
 // global constants
-var USAGE = "usage: pitchfork [-hjTvV] [-tx, --text] -a ARTIST_NAME -t ALBUM_TITLE";
+var USAGE = "usage: pitchfork [-hjTvVp] [-tx, --text] -a ARTIST_NAME -t ALBUM_TITLE";
 var VERSION = require("../package").version;
 
 function parse_args(args){
@@ -48,6 +48,13 @@ function parse_args(args){
     }
   }
 
+  // if there's a page num
+  if (has_flags(["-p"])) {
+    // find the value paired with the -p flag
+    var pageIdx = args.indexOf("-p");
+    var pageNum = args[pageIdx+1];
+  }
+
   return {
     artist: artist,
     album: album,
@@ -55,9 +62,12 @@ function parse_args(args){
     verbose: has_flags(["-v", "--verbose"]),
     version: has_flags(["-V", "--version"]),
     truncated: has_flags(["-T","--truncated"]),
-    justText: has_flags(["-tx", "--text"])
+    justText: has_flags(["-tx", "--text"]),
+    pageNum: pageNum || false,
   };
 }
+
+
 
 void function main(origArgs) {
 
@@ -70,18 +80,58 @@ void function main(origArgs) {
   var version = opts.version || false;
   var truncated = opts.truncated || false;
   var justText = opts.justText;
+  var pageNum = opts.pageNum || false;
 
   // if in "help mode"
   if (origArgs.indexOf("-h") != -1 || origArgs.length == 2) {
     // display usage
     console.log(USAGE);
 
-  // if there's an artist and/or album
   } else if (version) {
     console.log(VERSION);
+
+  // if there's a page num
+  } else if (pageNum) {
+    search = new Pitchfork.Page(pageNum);
+    search.promise.then(function () {
+      if (search.results.length === 0) {
+        console.log("Your search returned no results!  Please try a differnt query.");
+        return;
+      }
+      var review = search.results[0];
+      review.promise.then(function(){
+        var output
+          , printer;
+
+        
+        if (json) { printer = JSON.stringify; }
+        if (truncated) { output = review.truncated(); }
+
+        if (justText) {
+          output = review.text_pretty_print();
+          printer = function (o) { return o; };
+        }
+        
+        output = output || review.attributes;
+        printer = printer || prettyjson.render;
+
+        var reviews = [];
+        search.results.forEach(function (result) {
+          var review;
+          if (verbose) { review = result.verbose(); }
+          else { review = result.truncated() }
+          reviews.push(review);
+        });
+        // print a list of reviews
+        console.log(printer(reviews));
+
+      });
+    })
+
+  // if there's an artist and/or album
   } else if (artist || album) {
      search = new Pitchfork.Search(artist, album);
-      search.promise.then(function(){
+      search.promise.then(function () {
         if (search.results.length === 0) {
           console.log("Your search returned no results!  Please try a differnt query.");
           return;
