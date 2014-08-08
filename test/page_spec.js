@@ -20,7 +20,7 @@ describe("Page", function(){
     done();
   })
 
-  describe("and when the artist and album are given", function(){
+  describe("and when a valid page number is given", function(){
 
     var page = new Page(1)
 
@@ -32,6 +32,21 @@ describe("Page", function(){
       // console.log("results", search.results[0].constructor)
       page.results[0].should.be.instanceOf(Review)
       page.results.length.should.gt(5);
+      done();
+    })
+
+  })
+
+  describe("and when an invalid page number is given", function(){
+
+    var page = new Page(1000)
+
+    it(".promise should return and eventually fulfill a promise", function(done){
+      page.promise.should.eventually.be.fulfilled.and.notify(done)
+    });
+
+    it(".results should return an empty {Array} ", function(done){
+      page.results.length.should.eq(0);
       done();
     })
 

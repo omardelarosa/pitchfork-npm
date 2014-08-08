@@ -66,6 +66,7 @@ function Review(attributes){
   this.fullUrl = [BASE_URL, this.url].join("");
   // fetches on initialization and saves to .promise
   this.promise = this.fetch()
+  this.page = attributes.page || false;
 }
 
 /**
@@ -101,7 +102,7 @@ Review.prototype.fetch = function(){
     }
 
     // set multi-album attributes
-    if (multi) {
+    if (multi && !self.page) {
 
       var titles = [];
       var queryTitle = self.search.query.album;
@@ -111,8 +112,12 @@ Review.prototype.fetch = function(){
       var bestTitleMatch = get_best_match(queryTitle, titles);
       var indexOfMatch = titles.indexOf(bestTitleMatch);
 
+
+
       // set attributes
       self.attributes.title = bestTitleMatch.trim();
+
+      self.attributes.multi = true;
 
       var label_year = self.$('.review-meta h3')
                         .eq(indexOfMatch)
@@ -146,6 +151,75 @@ Review.prototype.fetch = function(){
                                 .find('.pub-date')
                                 .text();
 
+    } else if (multi && self.page) {
+
+      var titles = [];
+      self.$('.review-meta h2').each(function(idx, el){
+        titles.push(el.children[0].data)
+      })
+
+      // set attributes
+      self.attributes.titles = titles
+
+      self.attributes.multi = true;
+
+      self.attributes.labels = [];
+      self.attributes.years = [];
+      self.attributes.scores = [];
+      self.attributes.covers = [];
+      self.attributes.authors = [];
+      self.attributes.dates = [];
+
+      titles.forEach(function(title, idx){
+
+        var label_year = self.$('.review-meta h3')
+                        .eq(idx)
+                        .text()
+                        .split(";");
+
+        self.attributes.labels.push(
+                                      label_year[0]
+                                        .trim()
+                                    );
+
+        self.attributes.years.push(
+                                    label_year[1]
+                                      .trim()
+                                    );
+
+        self.attributes.scores.push(
+                                      parseFloat(
+                                        self.$('.review-meta')
+                                          .find('.score')
+                                          .eq(indexOfMatch)
+                                          .text()
+                                      )
+                                    );
+
+        self.attributes.covers.push(
+                                    self.$('.review-meta')
+                                    .find('.artwork img')
+                                    .eq(indexOfMatch)
+                                    .attr('src')
+                                  );
+
+        self.attributes.authors.push(
+                                  self.$('.review-meta h4')
+                                    .eq(indexOfMatch)
+                                    .find('address')
+                                    .text()
+                                  );
+
+        self.attributes.dates.push(
+                                  self.$('.review-meta h4')
+                                    .eq(indexOfMatch)
+                                    .find('.pub-date')
+                                    .text()
+                                  );
+
+      })
+
+      
     } else {
       // set single-album attributes
       self.attributes.title = self.fullTitle.trim();

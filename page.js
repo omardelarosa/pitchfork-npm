@@ -39,9 +39,8 @@ Page.prototype.init = function(){
     .end(function(res){
       self.responseStatus = res.statusCode
        if (self.responseStatus != 200) {
-        self.emit("error", CONNECTION_ERR)
-        cb(CONNECTION_ERR)
-        return dfd.reject(CONNECTION_ERR);
+        self.emit('ready')
+        return dfd.fulfill([])
       } else {
         var $ = cheerio.load(res.text);
         var links = $('.object-grid li ul li a')
@@ -66,7 +65,8 @@ Page.prototype.init = function(){
           jobs.push(function(done){
             var r = new Review({
               name: query.artist+" - "+query.album,
-              url: query.url
+              url: query.url,
+              page: true
             })
 
             r.promise.then(function(rev){
