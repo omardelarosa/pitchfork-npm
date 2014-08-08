@@ -167,8 +167,16 @@ Review.prototype.fetch = function(){
       self.attributes.years = [];
       self.attributes.scores = [];
       self.attributes.covers = [];
-      self.attributes.authors = [];
-      self.attributes.dates = [];
+
+      /**
+        *
+        *  For consistency, multi-albums with generate the same
+        *  attributes as single albums by setting the first album
+        *  in the collection's values for their label, year, cover.
+        *  The exception is 'score' which is a mathematical average
+        *  of the entire collection's scores.
+        *  
+        */
 
       titles.forEach(function(title, idx){
 
@@ -181,41 +189,50 @@ Review.prototype.fetch = function(){
                                       label_year[0]
                                         .trim()
                                     );
+        self.attributes.label = self.attributes.labels[0];
 
         self.attributes.years.push(
                                     label_year[1]
                                       .trim()
                                     );
+        self.attributes.year = self.attributes.years[0];
 
         self.attributes.scores.push(
                                       parseFloat(
                                         self.$('.review-meta')
                                           .find('.score')
-                                          .eq(indexOfMatch)
+                                          .eq(idx)
                                           .text()
                                       )
                                     );
 
+        // multi-album score is an average of all scores
+        self.attributes.score = (function(scores){
+          var sum = 0;
+          scores.forEach(function(score){
+            sum += score;
+          })
+          return (sum/scores.length)
+        })(self.attributes.scores)
+
         self.attributes.covers.push(
                                     self.$('.review-meta')
                                     .find('.artwork img')
-                                    .eq(indexOfMatch)
+                                    .eq(idx)
                                     .attr('src')
                                   );
 
-        self.attributes.authors.push(
-                                  self.$('.review-meta h4')
-                                    .eq(indexOfMatch)
-                                    .find('address')
-                                    .text()
-                                  );
+        self.attributes.cover = self.attributes.covers[0]
 
-        self.attributes.dates.push(
-                                  self.$('.review-meta h4')
-                                    .eq(indexOfMatch)
-                                    .find('.pub-date')
-                                    .text()
-                                  );
+        self.attributes.author = self.$('.review-meta h4')
+                                .eq(idx)
+                                .find('address')
+                                .text();
+
+        self.attributes.date = self.$('.review-meta h4')
+                                .eq(idx)
+                                .find('.pub-date')
+                                .text();
 
       })
 
