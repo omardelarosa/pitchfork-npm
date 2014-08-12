@@ -241,19 +241,20 @@ Review.prototype.fetch = function(){
       // set single-album attributes
       self.attributes.title = self.fullTitle.trim();
 
-      var label_year_author = self.$(".info h3").text().split(";");
+      var label_year = self.$(".review-meta .info h3").text().split(";");
 
-      var year_author = label_year_author[1].split(/\s+By\s+/);
+      var label = label_year[0]
+      var year = label_year[1]
 
-      self.attributes.label = label_year_author[0].trim();
+      self.attributes.label = label.trim();
 
-      self.attributes.year = year_author[0].trim();
+      self.attributes.year = year.trim();
 
       self.attributes.score = parseFloat(self.$(".score").text().trim());
 
       self.attributes.cover = self.$(".artwork img").attr("src");
 
-      self.attributes.author = year_author[1];
+      self.attributes.author = self.$(".review-meta .info h4 address").text()
 
       self.attributes.date = self.$(".pub-date").text();
 
