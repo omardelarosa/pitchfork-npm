@@ -248,7 +248,7 @@ Review.prototype.fetch = function(){
 
       self.attributes.label = label.trim();
 
-      self.attributes.year = year.trim();
+      self.attributes.year = year ? year.trim() : "";
 
       self.attributes.score = parseFloat(self.$(".score").text().trim());
 
