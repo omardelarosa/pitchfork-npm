@@ -60,10 +60,10 @@ describe("CLI (Command Line Tool)", function(){
 
   })
 
-  describe("when searching for a valid artist and album", function(){
-
+  xdescribe("when searching for a valid artist and album", function(){
+    
     it("should return all attributes and pretty json by default", function(done){
-      var proc = execFile(cli_filepath, valid_args, function(err, stdout, stderr){
+      var proc = execFile(cli_filepath, valid_args, function(err, stdout, stderr){        
         expect(stdout).to.equal(prettyjson.render(review.attributes)+"\n")
         done();
       })

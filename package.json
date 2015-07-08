@@ -1,6 +1,6 @@
 {
   "name": "pitchfork",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "An Unofficial Pitchfork Music API client for Node.js",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "cheerio": "^0.17.0",
-    "diff": "^1.0.8",
+    "diff": "^1.4.0",
     "lodash": "^2.4.1",
     "prettyjson": "^1.0.0",
     "q": "^1.0.1",

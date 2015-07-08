@@ -12,8 +12,6 @@ describe("Page", function(){
 
   this.timeout(10000);
 
-  
-
   it("should return an instance of {Page}", function(done){
     var page = new Page(1)
     page.should.be.instanceOf(Page);
