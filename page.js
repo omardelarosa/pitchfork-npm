@@ -34,7 +34,7 @@ Page.prototype.init = function(){
   var dfd = q.defer()
     , self = this
 
-  request.get(BASE_URL+this.number)
+  request.get(BASE_URL+this.number+'/')
     .set('User-Agent', USER_AGENT)
     .end(function(res){
       self.responseStatus = res.statusCode
