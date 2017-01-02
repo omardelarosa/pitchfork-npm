@@ -3,6 +3,7 @@ var s = new p.Search("wilco")
 
 s.on("ready", function(results){
   results.forEach(function(review, idx){
-    console.log("review #%d: ",idx, review.truncated())
+    // Use review object here
+    console.log("review #%d: ",idx, review.fullTitle)
   })
 })
