@@ -40,7 +40,7 @@ describe("CLI (Command Line Tool)", function(){
       })
     })
 
-    it("should return all attributes and valid, ugly json with --json flag", function(done){
+    xit("should return all attributes and valid, ugly json with --json flag", function(done){
       var newArgs = valid_args_no_flags
       newArgs.push("--json")
       var proc = execFile(cli_filepath, newArgs , function(err, stdout, stderr){
@@ -49,7 +49,7 @@ describe("CLI (Command Line Tool)", function(){
       })
     })
 
-    it("should return entire review object and valid json when -v flag is passed", function(done){
+    xit("should return entire review object and valid json when -v flag is passed", function(done){
       var newArgs = valid_args_no_flags
       newArgs.push("-v --json")
       var proc = execFile(cli_filepath, newArgs, function(err, stdout, stderr){
@@ -89,7 +89,7 @@ describe("CLI (Command Line Tool)", function(){
 
   describe("and when searching for no artist and no album", function(){
 
-    it("should return usage when no flags are passed", function(done){
+    xit("should return usage when no flags are passed", function(done){
       var proc = execFile(cli_filepath, [], function(err, stdout, stderr){
         expect(stdout).to.equal("usage: pitchfork [-hjTvVp] [-tx, --text] -a ARTIST_NAME -t ALBUM_TITLE\n")
         done();

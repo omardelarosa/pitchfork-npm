@@ -50,7 +50,7 @@ function normalize_search_response(htmlString) {
     .map(function(idx, a) {
       return a.attribs['href'];
     });
-  var artist = $('#result-artists .artist-name')
+  var artist = $('#result-albumreviews .album-artist li')
     .map(function(idx, a) {
       return a.children[0].data;
     })[0];
@@ -105,10 +105,17 @@ util.inherits(Search, EventEmitter);
 
 Search.prototype.init = function(){
   var self = this
-    , query = [self.query.artist,"%20",self.query.album].join("").replace(/\s+/,"%20")
-  // create a deferred obj
+    , queryArr = [self.query.artist]
     , dfd = q.defer();
 
+  if (self.query.album) {
+    queryArr.push("%20");
+    queryArr.push(self.query.album);
+  }
+
+  query = queryArr.join("").replace(/\s+/,"%20")
+
+  // create a deferred obj
   request.get(BASE_URL+query)
     // .set('User-Agent', USER_AGENT)
     .end(function(res) {
@@ -118,8 +125,6 @@ Search.prototype.init = function(){
         return dfd.reject(CONNECTION_ERR);
       } else {
         var reviews = normalize_search_response(res.text);
-        // var reviews = get_review_objects(res.body)
-        // var reviews = [];
         // if there are no matches...
         if (reviews.length === 0) {
           // ...return no results
