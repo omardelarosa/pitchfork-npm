@@ -1,21 +1,23 @@
 var request = require('superagent')
+  , _ = require('lodash')
   , q = require('q')
   , Review = require('./review.js')
   , util = require('util')
   , async = require('async')
-  , EventEmitter = require('events').EventEmitter;
+  , EventEmitter = require('events').EventEmitter
+  , cheerio = require('cheerio');
 
 // global constants
 var VERSION = require('./package').version
   , USER_AGENT = 'omardelarosa/pitchfork-npm-v'+VERSION
-  , BASE_URL = "http://pitchfork.com/search/ac/?query="
+  , BASE_URL = "http://pitchfork.com/search/?query="
   , CONNECTION_ERR = new Error("Failed to connect to Pitchfork!");
 
 
 // extracts the first review inside of 
 function get_review_objects(responseBody){
   var review_objects = [];
-  responseBody.forEach(function(obj){
+  _.forEach(responseBody, function(obj){
     var obj 
     var label = obj["label"];
     if (label == "Reviews") {
@@ -25,6 +27,40 @@ function get_review_objects(responseBody){
     }
   })
   return review_objects;
+}
+
+// normalize search response
+function normalize_search_response(htmlString) {
+  var $ = cheerio.load(htmlString);
+  var links = $('#result-albumreviews .album-link')
+  var artists = $('#result-artists .artist-name')
+  var albums = $('#result-albumreviews')
+    
+  var titles = $('#result-albumreviews .title')
+    .map(function(idx, a) {
+      return _.get(a, 'children[0].data', null);
+    })
+    .filter(function (idx, a) { return !!a });
+
+  if (_.isEmpty(titles)) {
+    return [];
+  }
+
+  var links = $('#result-albumreviews .album-link')
+    .map(function(idx, a) {
+      return a.attribs['href'];
+    });
+  var artist = $('#result-albumreviews .album-artist li')
+    .map(function(idx, a) {
+      return a.children[0].data;
+    })[0];
+ 
+  return titles.map(function (idx, a) {
+    return {
+      name: artist + ' - ' + titles[idx],
+      url: links[idx]
+    }
+  });
 }
 
 /**
@@ -69,19 +105,26 @@ util.inherits(Search, EventEmitter);
 
 Search.prototype.init = function(){
   var self = this
-    , query = [self.query.artist,"%20",self.query.album].join("").replace(/\s+/,"%20")
-  // create a deferred obj
+    , queryArr = [self.query.artist]
     , dfd = q.defer();
 
+  if (self.query.album) {
+    queryArr.push("%20");
+    queryArr.push(self.query.album);
+  }
+
+  query = queryArr.join("").replace(/\s+/,"%20")
+
+  // create a deferred obj
   request.get(BASE_URL+query)
-    .set('User-Agent', USER_AGENT)
+    // .set('User-Agent', USER_AGENT)
     .end(function(res) {
       if (res.statusCode != 200) {
         self.emit("error", CONNECTION_ERR)
         cb(CONNECTION_ERR)
         return dfd.reject(CONNECTION_ERR);
       } else {
-        var reviews = get_review_objects(res.body)
+        var reviews = normalize_search_response(res.text);
         // if there are no matches...
         if (reviews.length === 0) {
           // ...return no results
@@ -104,7 +147,7 @@ Search.prototype.init = function(){
           // return an array of albums
           self.results = [];
           var tasks = []
-          reviews.forEach(function(review){
+          _.each(reviews, function(review){
             var rev = review
             tasks.push(function(done){
               var r = new Review(rev)

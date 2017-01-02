@@ -13,6 +13,16 @@ var BASE_URL = 'http://pitchfork.com';
 var INVALID_REVIEW_ERROR = new Error("Review cannot be found without a 'url' and 'name'!");
 var PAGE_NOT_FOUND_ERROR = new Error("Page Not Found!")
 
+function clean_year(yearText) {
+  var re = /(\d+)/;
+  var result = re.exec(yearText);
+  if (result) {
+    return result[0];
+  } else {
+    return '';
+  }
+}
+
 /**
   * helper function that finds the best matching string
   *
@@ -103,7 +113,6 @@ Review.prototype.fetch = function(){
 
     // set multi-album attributes
     if (multi && !self.page) {
-
       var titles = [];
       var queryTitle = self.search.query.album;
       self.$('.review-meta h2').each(function(idx, el){
@@ -124,9 +133,9 @@ Review.prototype.fetch = function(){
                         .text()
                         .split(";");
 
-      self.attributes.label = label_year[0]
-                                .trim();
-
+      self.attributes.label = self.$('.review-detail .label-list li')
+                                .children[0]
+                                .text();
       self.attributes.year = label_year[1]
                                 .trim();
 
@@ -152,7 +161,6 @@ Review.prototype.fetch = function(){
                                 .text();
 
     } else if (multi && self.page) {
-
       var titles = [];
       self.$('.review-meta h2').each(function(idx, el){
         titles.push(el.children[0].data)
@@ -241,20 +249,18 @@ Review.prototype.fetch = function(){
       // set single-album attributes
       self.attributes.title = self.fullTitle.trim();
 
-      var label_year = self.$(".review-meta .info h3").text().split(";");
-
-      var label = label_year[0]
-      var year = label_year[1]
+      var label = self.$('.labels-and-years .label-list li').text();
+      var yearText = self.$('.labels-and-years .year').text();
 
       self.attributes.label = label.trim();
 
-      self.attributes.year = year ? year.trim() : "";
+      self.attributes.year = clean_year(yearText);
 
       self.attributes.score = parseFloat(self.$(".score").text().trim());
 
       self.attributes.cover = self.$(".artwork img").attr("src");
 
-      self.attributes.author = self.$(".review-meta .info h4 address").text()
+      self.attributes.author = self.$(".authors-detail .display-name").text()
 
       self.attributes.date = self.$(".pub-date").text();
 
@@ -262,11 +268,9 @@ Review.prototype.fetch = function(){
     
     // TODO: replace breaks
     self.attributes.editorial = {
-      html: self.$(".editorial").html(),
-      text: self.$(".editorial").text()
+      html: self.$(".review-text").html(),
+      text: self.$(".review-text").text()
     }
-
-    
   }
 
   request.get(this.fullUrl)
@@ -281,7 +285,6 @@ Review.prototype.fetch = function(){
       return dfd.reject(PAGE_NOT_FOUND_ERROR);
     } else {
       if (self.$('.review-multi').length != 0) {
-        // console.log("multi review!", self.search.query)
         parseHtml({multi: true});
       } else {
         parseHtml();
