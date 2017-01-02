@@ -35,7 +35,7 @@ Page.prototype.init = function(){
     , self = this
 
   request.get(BASE_URL+this.number+'/')
-    .set('User-Agent', USER_AGENT)
+    // .set('User-Agent', USER_AGENT)
     .end(function(res){
       self.responseStatus = res.statusCode
        if (self.responseStatus != 200) {
@@ -43,9 +43,9 @@ Page.prototype.init = function(){
         return dfd.fulfill([])
       } else {
         var $ = cheerio.load(res.text);
-        var links = $('.object-grid li ul li a')
-        var artists = $('.object-grid li ul li a div h1')
-        var albums = $('.object-grid li ul li a div h2')
+        var links = $('#result-albumreviews .album-link')
+        var artists = $('#result-artists .artist-name')
+        var albums = $('#result-albumreviews .title')
         var reviewQueries = [];
 
         var i = 0;

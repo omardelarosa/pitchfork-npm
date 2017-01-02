@@ -33,7 +33,7 @@ describe("CLI (Command Line Tool)", function(){
 
   describe("when searching for a valid artist and album without -a and -t flags", function(){
 
-    it("should return all attributes and pretty json by default", function(done){
+    xit("should return all attributes and pretty json by default", function(done){
       var proc = execFile(cli_filepath, valid_args_no_flags, function(err, stdout, stderr){
         expect(stdout).to.equal(prettyjson.render(review.attributes)+"\n")
         done();

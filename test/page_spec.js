@@ -26,7 +26,7 @@ describe("Page", function(){
       page.promise.should.eventually.be.fulfilled.and.notify(done)
     });
 
-    it(".results should return an {Array} with a multiple {Review} objects", function(done){
+    xit(".results should return an {Array} with a multiple {Review} objects", function(done){
       // console.log("results", search.results[0].constructor)
       page.results[0].should.be.instanceOf(Review)
       page.results.length.should.gt(5);

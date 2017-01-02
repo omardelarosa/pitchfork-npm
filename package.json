@@ -30,9 +30,9 @@
   "bin": "./bin/pitchfork",
   "dependencies": {
     "async": "^0.9.0",
-    "cheerio": "^0.17.0",
+    "cheerio": "~0.22.0",
     "diff": "^1.4.0",
-    "lodash": "^2.4.1",
+    "lodash": "^4.0.0",
     "prettyjson": "^1.0.0",
     "q": "^1.0.1",
     "superagent": "^0.18.2"
