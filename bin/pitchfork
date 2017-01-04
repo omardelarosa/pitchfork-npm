@@ -53,7 +53,7 @@ void function main(origArgs) {
   var pageNum = opts.pageNum || false;
 
   // if in "help mode"
-  if (origArgs["h"]) {
+  if (origArgs["h"] || argv._.length == 0) {
     // display usage
     console.log(USAGE);
 
