@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#! /usr/bin/env node
 
 /**
   * Simple Command-Line Wrapper for the main Pitchfork Module (../index.js)
@@ -19,8 +19,8 @@ var VERSION = require("../package").version;
 
 function parse_args(args){
 
-  var artist = args['a'];
-  var album = args['t'];
+  var artist = args['a'] || argv._[0];
+  var album = args['t'] || argv._[1];
 
   // if there's a page num
   var pageNum = args['p'];
