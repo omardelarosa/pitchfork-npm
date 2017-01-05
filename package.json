@@ -1,6 +1,6 @@
 {
   "name": "pitchfork",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "An Unofficial Pitchfork Music API client for Node.js",
   "main": "index.js",
   "scripts": {
