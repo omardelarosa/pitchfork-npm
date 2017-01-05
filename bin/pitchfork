@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#! /usr/bin/env node
 
 /**
   * Simple Command-Line Wrapper for the main Pitchfork Module (../index.js)
@@ -19,8 +19,8 @@ var VERSION = require("../package").version;
 
 function parse_args(args){
 
-  var artist = args['a'];
-  var album = args['t'];
+  var artist = args['a'] || argv._[0];
+  var album = args['t'] || argv._[1];
 
   // if there's a page num
   var pageNum = args['p'];
@@ -57,7 +57,7 @@ void function main(origArgs) {
     // display usage
     console.log(USAGE);
 
-  } else if (version) {
+  } else if (origArgs["V"] || origArgs["version"]) {
     console.log(VERSION);
 
   // if there's a page num
@@ -65,7 +65,7 @@ void function main(origArgs) {
     search = new Pitchfork.Page(pageNum);
     search.promise.then(function () {
       if (search.results.length === 0) {
-        console.log("Your search returned no results!  Please try a differnt query.");
+        console.log("Your search returned no results!  Please try a different query.");
         return;
       }
       var review = search.results[0];
@@ -133,5 +133,7 @@ void function main(origArgs) {
           });
         });
       });
-  }
+  } else {
+    console.log(USAGE);
+  };
 }(argv);
