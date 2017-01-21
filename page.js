@@ -16,7 +16,7 @@ var VERSION = require('./package').version
 
 /**
   * Fetches a single page of Album Reviews
-  * 
+  *
   */
 
 function Page (number) {
@@ -24,7 +24,7 @@ function Page (number) {
   this.number = number;
   this.results = [];
   this.promise = this.init();
-  
+
 }
 
 // extends EventEmitter
@@ -34,7 +34,7 @@ Page.prototype.init = function(){
   var dfd = q.defer()
     , self = this
 
-  request.get(BASE_URL+this.number+'/')
+  request.get(BASE_URL + (this.number ? ('?page=' + this.number ) : ''))
     // .set('User-Agent', USER_AGENT)
     .end(function(res){
       self.responseStatus = res.statusCode
@@ -43,23 +43,22 @@ Page.prototype.init = function(){
         return dfd.fulfill([])
       } else {
         var $ = cheerio.load(res.text);
-        var links = $('#result-albumreviews .album-link')
-        var artists = $('#result-artists .artist-name')
-        var albums = $('#result-albumreviews .title')
+        var links = $('.review .album-link')
+        var artists = $('.review .album-artist .artist-list')
+        var albums = $('.review .album-artist .title')
         var reviewQueries = [];
 
         var i = 0;
         while (i < links.length) {
           reviewQueries.push({
             url: links[i].attribs['href'],
-            artist: artists[i].children[0].data,
-            album: albums[i].children[0].data,
+            artist: $(artists[i]).text(),
+            album: $(albums[i]).text(),
           })
           i++
         }
 
         var jobs = [];
-
         reviewQueries.forEach(function(query){
 
           jobs.push(function(done){
@@ -78,7 +77,7 @@ Page.prototype.init = function(){
         })
 
         async.parallel(jobs, function(err, results){
-          if (err) { 
+          if (err) {
             self.emit("error");
             dfd.reject(err);
           }

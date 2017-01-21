@@ -26,8 +26,7 @@ describe("Page", function(){
       page.promise.should.eventually.be.fulfilled.and.notify(done)
     });
 
-    xit(".results should return an {Array} with a multiple {Review} objects", function(done){
-      // console.log("results", search.results[0].constructor)
+    it(".results should return an {Array} with a multiple {Review} objects", function(done){
       page.results[0].should.be.instanceOf(Review)
       page.results.length.should.gt(5);
       done();
@@ -35,20 +34,19 @@ describe("Page", function(){
 
   })
 
-  describe("and when an invalid page number is given", function(){
+  describe("and when an invalid page number is given it should default to nothing and", function(){
 
-    var page = new Page(1000)
+    var page = new Page('1000')
 
     it(".promise should return and eventually fulfill a promise", function(done){
       page.promise.should.eventually.be.fulfilled.and.notify(done)
     });
 
-    it(".results should return an empty {Array} ", function(done){
-      page.results.length.should.eq(0);
+    it(".results should return an {Array} with results default first page ", function(done){
+      page.results.length.should.eq(12);
       done();
     })
 
   })
 
 });
-
