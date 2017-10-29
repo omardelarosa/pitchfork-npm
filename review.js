@@ -57,7 +57,7 @@ function get_best_match(str, str_list){
 /**
   * A Review instance
   * @constructor
-  * @params attributes {Object} - an object of attributes. 
+  * @params attributes {Object} - an object of attributes.
   *  (note: 'url' and 'name' are required )
   */
 
@@ -103,7 +103,7 @@ Review.prototype.fetch = function(){
   /**
     * Parses the HTML received after fetch and sets attributes
     * of a single-album review.
-    * 
+    *
     */
 
   function parseHtml(opts){
@@ -183,7 +183,7 @@ Review.prototype.fetch = function(){
         *  in the collection's values for their label, year, cover.
         *  The exception is 'score' which is a mathematical average
         *  of the entire collection's scores.
-        *  
+        *
         */
 
       titles.forEach(function(title, idx){
@@ -244,7 +244,7 @@ Review.prototype.fetch = function(){
 
       })
 
-      
+
     } else {
       // set single-album attributes
       self.attributes.title = self.fullTitle.trim();
@@ -258,14 +258,14 @@ Review.prototype.fetch = function(){
 
       self.attributes.score = parseFloat(self.$(".score").text().trim());
 
-      self.attributes.cover = self.$(".artwork img").attr("src");
+      self.attributes.cover = self.$(".album-art img").attr("src");
 
       self.attributes.author = self.$(".authors-detail .display-name").text()
 
       self.attributes.date = self.$(".pub-date").text();
 
     }
-    
+
     // TODO: replace breaks
     self.attributes.editorial = {
       html: self.$(".review-text").html(),
@@ -279,7 +279,7 @@ Review.prototype.fetch = function(){
     self.$ = cheerio.load(self.html);
     // set attributes from html
     self.fullTitle = self.$("title").text().trim();
-    
+
     // TODO parse other attributes;
     if (self.fullTitle.search("Page Not Found") != -1) {
       return dfd.reject(PAGE_NOT_FOUND_ERROR);
@@ -288,7 +288,7 @@ Review.prototype.fetch = function(){
         parseHtml({multi: true});
       } else {
         parseHtml();
-      }  
+      }
       return dfd.resolve(self)
     }
   })
@@ -319,7 +319,7 @@ Review.prototype.verbose = function(){
         cache.push(self[key]);
         return vo[key] = self[key];
       }
-    } 
+    }
   }
   cache = null;
   return vo;
@@ -336,7 +336,7 @@ Review.prototype.text_pretty_print = function(){
   text.push("AUTHOR: "+this.attributes.author)
   text.push("DATE: "+this.attributes.date)
   text.push(this.attributes.editorial.text.replace("\n","\n\n"))
-  return text.join("\n\n\n") 
+  return text.join("\n\n\n")
 }
 
 // Review.prototype.toString = function(){
