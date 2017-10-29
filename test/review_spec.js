@@ -50,13 +50,13 @@ describe("Review", function(){
   })
 
   describe("and when review is a MultiReview", function(){
-    
+
     var search
       , review;
 
     before(function(done){
 
-      search = new Search("radiohead", "ok computer")
+      search = new Search("radiohead", "ok computer collector's edition")
       search.promise.then(function(results){
         results[0].promise.then(function(rev){
           review = rev;
