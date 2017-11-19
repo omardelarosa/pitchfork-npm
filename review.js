@@ -269,7 +269,8 @@ Review.prototype.fetch = function(){
     // TODO: replace breaks
     self.attributes.editorial = {
       html: self.$(".review-text").html(),
-      text: self.$(".review-text").text()
+      text: self.$(".review-text").text(),
+      abstract: self.$(".abstract").text().trim()
     }
   }
 
