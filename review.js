@@ -249,7 +249,7 @@ Review.prototype.fetch = function(){
       // set single-album attributes
       self.attributes.title = self.fullTitle.trim();
 
-      var label = self.$('.labels-and-years .label-list li').text();
+      var label = self.$('.labels-and-years .labels-list li:nth-child(1)').text();
       var yearText = self.$('.labels-and-years .year').text();
 
       self.attributes.label = label.trim();
@@ -260,7 +260,7 @@ Review.prototype.fetch = function(){
 
       self.attributes.cover = self.$(".album-art img").attr("src");
 
-      self.attributes.author = self.$(".authors-detail .display-name").text()
+      self.attributes.author = self.$(".authors-detail .authors-detail__display-name").text()
 
       self.attributes.date = self.$(".pub-date").text();
 
