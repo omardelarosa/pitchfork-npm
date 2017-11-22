@@ -26,6 +26,12 @@ describe("Review", function(){
       done();
     })
 
+    describe("the following attributes should be correct", function() {
+      it("the abstract", function(done) {
+        review.attributes.editorial.abstract.should.eq("Mogwai's second album, released in 1999, is getting a reissue with a bounty of bonus material that includes demos and the Travels in Constants EP. On Come On Die Young, Mogwai went about becoming the most sullen, brooding post-rock band they could possibly be.");
+        done(); 
+      })
+    })
   })
 
   describe("and when an invalid name or url are given", function(done){
