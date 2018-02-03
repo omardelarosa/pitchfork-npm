@@ -32,11 +32,8 @@ function get_review_objects(responseBody){
 // normalize search response
 function normalize_search_response(htmlString) {
   var $ = cheerio.load(htmlString);
-  var links = $('#result-albumreviews .album-link')
-  var artists = $('#result-artists .artist-name')
-  var albums = $('#result-albumreviews')
     
-  var titles = $('#result-albumreviews .title')
+  var titles = $('#result-albumreviews .review .review__title-album')
     .map(function(idx, a) {
       return _.get(a, 'children[0].data', null);
     })
@@ -46,11 +43,11 @@ function normalize_search_response(htmlString) {
     return [];
   }
 
-  var links = $('#result-albumreviews .album-link')
+  var links = $('#result-albumreviews .review .review__link')
     .map(function(idx, a) {
       return a.attribs['href'];
     });
-  var artist = $('#result-albumreviews .album-artist li')
+  var artist = $('#result-albumreviews .review .review__title-artist li')
     .map(function(idx, a) {
       return a.children[0].data;
     })[0];
