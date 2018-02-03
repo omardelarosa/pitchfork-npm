@@ -43,9 +43,9 @@ Page.prototype.init = function(){
         return dfd.fulfill([])
       } else {
         var $ = cheerio.load(res.text);
-        var links = $('.review .album-link')
-        var artists = $('.review .album-artist .artist-list')
-        var albums = $('.review .album-artist .title')
+        var links = $('.review .review__link')
+        var artists = $('.review .review__title .review__title-artist')
+        var albums = $('.review .review__title .review__title-album')
         var reviewQueries = [];
 
         var i = 0;
