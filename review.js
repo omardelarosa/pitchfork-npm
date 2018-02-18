@@ -249,8 +249,8 @@ Review.prototype.fetch = function(){
       // set single-album attributes
       self.attributes.title = self.fullTitle.trim();
 
-      var label = self.$('.labels-and-years .labels-list li:nth-child(1)').text();
-      var yearText = self.$('.labels-and-years .year').text();
+      var label = self.$('.single-album-tombstone__meta .single-album-tombstone__meta-labels li:nth-child(1)').text();
+      var yearText = self.$('.single-album-tombstone__meta .single-album-tombstone__meta-year').text();
 
       self.attributes.label = label.trim();
 
@@ -258,9 +258,9 @@ Review.prototype.fetch = function(){
 
       self.attributes.score = parseFloat(self.$(".score").text().trim());
 
-      self.attributes.cover = self.$(".album-art img").attr("src");
+      self.attributes.cover = self.$(".single-album-tombstone__art img").attr("src");
 
-      self.attributes.author = self.$(".authors-detail .authors-detail__display-name").text()
+      self.attributes.author = self.$(".authors-detail__item .authors-detail__display-name").text()
 
       self.attributes.date = self.$(".pub-date").text();
 
@@ -268,9 +268,9 @@ Review.prototype.fetch = function(){
 
     // TODO: replace breaks
     self.attributes.editorial = {
-      html: self.$(".review-text").html(),
-      text: self.$(".review-text").text(),
-      abstract: self.$(".abstract").text().trim()
+      html: self.$(".review-detail__text").html(),
+      text: self.$(".review-detail__text").text(),
+      abstract: self.$(".review-detail__abstract").text().trim()
     }
   }
 

@@ -85,28 +85,4 @@ describe("Review", function(){
 
   })
 
-  describe("and when review is a MultiReview", function(){
-
-    var search
-      , review;
-
-    before(function(done){
-
-      search = new Search("radiohead", "ok computer collector's edition")
-      search.promise.then(function(results){
-        results[0].promise.then(function(rev){
-          review = rev;
-          done();
-        })
-      })
-
-    })
-
-    it("should fuzzy match for a title amongst the title list", function(done){
-      review.attributes.title.should.eq("Radiohead: Pablo Honey: Collector's Edition / The Bends: Collector's Edition / OK Computer: Collector's Edition Album Review | Pitchfork");
-      done();
-    })
-
-  })
-
 });
